@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper" ref="aaa">
     <ul class="content">
+      <button @click="btnClick">按钮</button>
       <li>分类列表1</li>
       <li>分类列表2</li>
       <li>分类列表3</li>
@@ -91,16 +92,6 @@
       <li>分类列表88</li>
       <li>分类列表89</li>
       <li>分类列表90</li>
-      <li>分类列表91</li>
-      <li>分类列表92</li>
-      <li>分类列表93</li>
-      <li>分类列表94</li>
-      <li>分类列表95</li>
-      <li>分类列表96</li>
-      <li>分类列表97</li>
-      <li>分类列表98</li>
-      <li>分类列表99</li>
-      <li>分类列表100</li>
     </ul>
   </div>
 </template>
@@ -119,14 +110,28 @@ export default {
   //   new BScroll(".content", {});
   // },
   mounted() {
-    console.log(this.$refs.aaa);
-    console.log(document.querySelector(".wrapper"));
-    this.scroll = new BScroll(document.querySelector(".wrapper"), {});
+    // console.log(this.$refs.aaa);
+    // console.log(document.querySelector(".wrapper"));
+    this.scroll = new BScroll(document.querySelector(".wrapper"), {
+      probeType: 3,
+      pullUpLoad: true,
+    });
+    this.scroll.on("scroll", (position) => {
+      // console.log(position);
+    });
+    this.scroll.on("pullingUp", () => {
+      console.log("上拉加载更多");
+    });
+  },
+  methods: {
+    btnClick() {
+      console.log("1111");
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .wrapper {
   height: 150px;
   background-color: red;
