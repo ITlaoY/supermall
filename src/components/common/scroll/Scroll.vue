@@ -40,17 +40,23 @@ export default {
       this.$emit("scroll", position);
     });
     //监听上拉事件
-    this.scroll.on("pullingUp", () => {
-      // console.log("111");
-      this.$emit("pullingUp");
-    });
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp");
+      });
+    }
+    this.scroll.refresh();
   },
   methods: {
     scrollTo(x, y, time = 1000) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
     finishPullUp() {
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
+    },
+    refresh() {
+      // console.log("111");
+      this.scroll && this.scroll.refresh();
     },
   },
 };

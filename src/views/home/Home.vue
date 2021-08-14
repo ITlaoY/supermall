@@ -35,6 +35,7 @@ import Scroll from "@/components/common/scroll/Scroll";
 import BackTop from "@/components/content/backtop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "@/network/home.js";
+import { debounce } from "../../common/utils";
 
 export default {
   name: "Home",
@@ -73,6 +74,15 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  mounted() {
+    //监听item图片加载完成
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.$bus.$on("itemImageLoad", () => {
+      // console.log("111");
+      // this.$refs.scroll.refresh();
+      refresh();
+    });
   },
   methods: {
     //事件监听相关
