@@ -19,7 +19,7 @@ export default {
     return {
       iid: null,
       topImages: [],
-      goods: null,
+      goods: {},
     };
   },
   created() {

@@ -109,6 +109,7 @@ export default {
   height: 10px;
 }
 .info-service-item span {
-  font-size: 8px;
+  color: #333;
+  font-size: 12px;
 }
 </style>
