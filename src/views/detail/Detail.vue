@@ -44,19 +44,21 @@ export default {
       const data = res.result;
       //顶部轮播
       this.topImages = data.itemInfo.topImages;
-      //获取商品信息
+
+      //获取各个信息
+      //1.保存商品信息
       this.goods = new Goods(
         data.itemInfo,
         data.columns,
         data.shopInfo.services
       );
-      //获取店铺信息
+      //2.保存店铺信息
       this.shop = new Shop(data.shopInfo);
 
-      //保存商品详情数据
+      //3.保存商品详情数据
       this.detailInfo = data.detailInfo;
 
-      //获取参数信息
+      //4.保存参数信息
       this.paramInfo = new GoodsParam(
         data.itemParams.info,
         data.itemParams.rule
