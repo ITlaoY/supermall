@@ -63,6 +63,7 @@ export default {
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
+      itemImgListener: null,
     };
   },
   components: {
@@ -89,6 +90,7 @@ export default {
     // console.log("deactivated");
     this.saveY = this.$refs.scroll.getScrollY();
     // console.log(this.saveY);
+    this.$bus.$off("itemImgLoad", this.itemImgListener);
   },
   created() {
     //请求多个数据
@@ -101,11 +103,10 @@ export default {
   mounted() {
     //监听item图片加载完成
     const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("itemImageLoad", () => {
-      // console.log("111");
-      // this.$refs.scroll.refresh();
+    this.itemImgListener = () => {
       refresh();
-    });
+    };
+    this.$bus.$on("itemImageLoad", this.itemImgListener);
   },
   methods: {
     //事件监听相关

@@ -7,6 +7,8 @@
       <detail-shop-info :shop="shop" />
       <detail-comment-info :detail-info="detailInfo" @imageLoad="imageLoad" />
       <detail-param-info :param-info="paramInfo" />
+      <detail-pinglun-info :pinglun-info="PinglunInfo" />
+      <goods-list :goods="recommends"></goods-list>
     </scroll>
   </div>
 </template>
@@ -18,13 +20,24 @@ import DetailBaseInfo from "./childComps/DetailBaseInfo.vue";
 import DetailShopInfo from "./childComps/DetailShopInfo.vue";
 import DetailCommentInfo from "./childComps/DetailCommentInfo.vue";
 import DetailParamInfo from "./childComps/DetailParamInfo.vue";
+import DetailPinglunInfo from "./childComps/DetailPinglunInfo.vue";
 
 import Scroll from "../../components/common/scroll/Scroll.vue";
+import GoodsList from "../../components/content/goods/GoodsList.vue";
+// import { itemListenerMiXin } from "../../common/mixin";
 
-import { getDetail, Goods, Shop, GoodsParam } from "../../network/detail";
+import {
+  getDetail,
+  Goods,
+  Shop,
+  GoodsParam,
+  getRecommend,
+} from "../../network/detail";
+import { debounce } from "../../common/utils";
 
 export default {
   name: "Detail",
+  // mixins: [itemListenerMiXin],
   data() {
     return {
       iid: null,
@@ -33,14 +46,17 @@ export default {
       shop: {},
       detailInfo: {},
       paramInfo: {},
+      PinglunInfo: {},
+      recommends: [],
+      itemImgListener: null,
     };
   },
   created() {
     //保存iid
     this.iid = this.$route.params.iid;
-    //请求数据
+    //请求详情数据
     getDetail(this.iid).then((res) => {
-      console.log(res);
+      // console.log(res);
       const data = res.result;
       //顶部轮播
       this.topImages = data.itemInfo.topImages;
@@ -63,8 +79,19 @@ export default {
         data.itemParams.info,
         data.itemParams.rule
       );
+      //5.评论信息
+      if (data.rate.cRate !== 0) {
+        this.PinglunInfo = data.rate.list[0];
+      }
+    });
+
+    //请求推荐数据
+    getRecommend().then((res) => {
+      console.log(res);
+      this.recommends = res.data.list;
     });
   },
+
   methods: {
     imageLoad() {
       this.$refs.scroll.refresh();
@@ -78,6 +105,18 @@ export default {
     Scroll,
     DetailCommentInfo,
     DetailParamInfo,
+    DetailPinglunInfo,
+    GoodsList,
+  },
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.itemImgListener = () => {
+      refresh();
+    };
+    this.$bus.$on("itemImgLoad", this.itemImgListener);
+  },
+  distroyed() {
+    this.$bus.$off("itemImgLoad", this.itemImgListener);
   },
 };
 </script>
