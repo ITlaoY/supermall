@@ -16,7 +16,7 @@
       <goods-list :goods="recommends" ref="recommend"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
   </div>
 </template>
 
@@ -120,7 +120,7 @@ export default {
       this.themeTopYs.push(this.$refs.pinglun.$el.offsetTop - 44);
       this.themeTopYs.push(this.$refs.recommend.$el.offsetTop - 44);
       this.themeTopYs.push(Number.MAX_VALUE);
-      console.log(this.themeTopYs);
+      // console.log(this.themeTopYs);
     }, 100);
   },
 
@@ -161,6 +161,17 @@ export default {
     backClick() {
       //上拉回到顶部
       this.$refs.scroll.scrollTo(0, 0);
+    },
+    addToCart() {
+      //获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+      //将商品添加到购物车
+      this.$store.dispatch("addCart", product);
     },
   },
   components: {
