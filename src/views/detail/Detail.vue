@@ -17,6 +17,7 @@
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
     <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
+    <!-- <toast :message="message" :show="show"></toast> -->
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar.vue";
 import Scroll from "../../components/common/scroll/Scroll.vue";
 import GoodsList from "../../components/content/goods/GoodsList.vue";
 import BackTop from "../../components/content/backtop/BackTop.vue";
+// import Toast from "../../components/common/toast/Toast.vue";
 // import { itemListenerMiXin } from "../../common/mixin";
 
 import {
@@ -62,6 +64,8 @@ export default {
       getThemeTopY: null,
       currentIndex: 0,
       isShowBackTop: false,
+      // message: "",
+      // show: false,
     };
   },
   created() {
@@ -171,7 +175,17 @@ export default {
       product.price = this.goods.realPrice;
       product.iid = this.iid;
       //将商品添加到购物车
-      this.$store.dispatch("addCart", product);
+      this.$store.dispatch("addCart", product).then((res) => {
+        // this.show = true;
+        // this.message = res;
+
+        // setTimeout(() => {
+        //   this.show = false;
+        //   this.message = "";
+        // }, 1500);
+        // console.log(res);
+        this.$toast.show(res, 1000);
+      });
     },
   },
   components: {
@@ -186,6 +200,7 @@ export default {
     GoodsList,
     DetailBottomBar,
     BackTop,
+    // Toast,
   },
   mounted() {
     const refresh = debounce(this.$refs.scroll.refresh, 200);
